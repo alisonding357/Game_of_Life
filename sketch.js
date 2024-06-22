@@ -7,8 +7,8 @@ let max_cols;
 let resolution;
 let active = false;
 let slider;
-let start_x;
-let start_y;
+let start_row;
+let start_col;
 
 function make2DArray(rows, cols) {
     let array = new Array(rows);
@@ -20,13 +20,14 @@ function make2DArray(rows, cols) {
 
 function setup() {
     createCanvas(800,600);
+    background(255);
     slider = createSlider(10, 100, 10);
     slider.position(10, 10);
     slider.size(100);
     resolution = slider.value();
 
-    start_x = 0;
-    start_y = 0;
+    start_row = 0;
+    start_col = 0;
     rows = width/resolution;
     cols = height/resolution;
     max_rows = width/min_res;
@@ -34,7 +35,7 @@ function setup() {
 
     grid = make2DArray(max_rows, max_cols);
 
-    if(active) active = false;
+    if(active) run();
 
     for(let i = 0; i<max_rows; i++) {
         for(let j = 0; j< max_cols; j++) {
@@ -50,11 +51,11 @@ function draw(){
     cols = height/resolution;
     if(active) calculateNext();
 
-    for(let i = start_y; i < rows + start_y; i++) {
-        for(let j = start_x; j < cols + start_x; j++) {
+    for(let i = 0; i < rows; i++) {
+        for(let j = 0; j < cols; j++) {
             let x = i * resolution;
             let y = j * resolution;
-            if(grid[i][j] == 1){
+            if(grid[i+start_row][j+start_col] == 1){
                 fill(255); 
                 rect(x,y,resolution,resolution);
                 stroke(0);
@@ -68,10 +69,10 @@ function draw(){
     }
 
     if(keyIsPressed){
-        if(keyCode == RIGHT_ARROW && (start_x + cols < max_cols)) start_x++;
-        if(keyCode == LEFT_ARROW && start_x > 0) start_x--;
-        if(keyCode == UP_ARROW && start_y > 0) start_y--;
-        if(keyCode == DOWN_ARROW && start_y + rows < max_rows) start_y++;
+        if(keyCode == RIGHT_ARROW && (start_row + rows < max_rows)) start_row++;
+        if(keyCode == LEFT_ARROW && start_row > 0) start_row--;
+        if(keyCode == UP_ARROW && start_col > 0) start_col--;
+        if(keyCode == DOWN_ARROW && start_col + cols < max_rows) start_col++;
     } 
 }
 
@@ -93,16 +94,17 @@ function mouseDragged(){
     let y = floor(mouseY/resolution);
     if (x >= 0 && x < rows && y >= 0 && y < cols) {
         if(active) run();
-        grid[x][y] = 1; // Set the clicked cell to white (alive)
+        grid[x+start_row][y+start_col] = 1; // Set the clicked cell to white (alive)
     }
 }
 
 
 function clearGrid() {
-    start_x = 0;
-    start_y = 0;
-    for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < cols; j++) {
+    start_row = 0;
+    start_col = 0;
+    if(active) active = false;
+    for (let i = 0; i < max_rows; i++) {
+        for (let j = 0; j < max_cols; j++) {
             grid[i][j] = 0;
         }
     }
