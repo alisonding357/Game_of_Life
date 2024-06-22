@@ -7,8 +7,8 @@ let max_cols;
 let resolution;
 let active = false;
 let slider;
-let start_x = 0;
-let start_y = 0;
+let start_x;
+let start_y;
 
 function make2DArray(rows, cols) {
     let array = new Array(rows);
@@ -25,6 +25,8 @@ function setup() {
     slider.size(100);
     resolution = slider.value();
 
+    start_x = 0;
+    start_y = 0;
     rows = width/resolution;
     cols = height/resolution;
     max_rows = width/min_res;
@@ -32,8 +34,10 @@ function setup() {
 
     grid = make2DArray(max_rows, max_cols);
 
-    for(let i = start_x; i<max_rows; i++) {
-        for(let j = start_y; j< max_cols; j++) {
+    if(active) active = false;
+
+    for(let i = 0; i<max_rows; i++) {
+        for(let j = 0; j< max_cols; j++) {
             if(grid[i][j]!= 1) grid[i][j] = floor(random(2));
         }
     }
@@ -46,10 +50,10 @@ function draw(){
     cols = height/resolution;
     if(active) calculateNext();
 
-    for(let i = start_x; i<rows; i++) {
-        for(let j = 0; j< cols; j++) {
+    for(let i = start_y; i < rows + start_y; i++) {
+        for(let j = start_x; j < cols + start_x; j++) {
             let x = i * resolution;
-            let y = j * resolution; 
+            let y = j * resolution;
             if(grid[i][j] == 1){
                 fill(255); 
                 rect(x,y,resolution,resolution);
@@ -62,13 +66,13 @@ function draw(){
             }
         }
     }
-    
-    if (keyIsDown(RIGHT_ARROW) === true) {
-        start_x ++;
-    }
-    if (keyIsDown(LEFT_ARROW) === true) {
-        start_x --;
-    }
+
+    if(keyIsPressed){
+        if(keyCode == RIGHT_ARROW && (start_x + cols < max_cols)) start_x++;
+        if(keyCode == LEFT_ARROW && start_x > 0) start_x--;
+        if(keyCode == UP_ARROW && start_y > 0) start_y--;
+        if(keyCode == DOWN_ARROW && start_y + rows < max_rows) start_y++;
+    } 
 }
 
 function step() {
@@ -95,6 +99,8 @@ function mouseDragged(){
 
 
 function clearGrid() {
+    start_x = 0;
+    start_y = 0;
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
             grid[i][j] = 0;
