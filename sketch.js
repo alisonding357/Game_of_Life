@@ -10,13 +10,16 @@ let slider;
 let start_row;
 let start_col;
 
-function make2DArray(rows, cols) {
-    let array = new Array(rows);
-    for (let i = 0; i<array.length; i++) {
-        array[i] = new Array(cols);
+//problem: has trouble with resizing after i scroll 
+//the grid is probably bigger than the draw screen
+
+function make2DArray(cols, rows) {
+    let arr = new Array(cols);
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] = new Array(rows);
     }
-    return array;
-}
+    return arr;
+  }
 
 function setup() {
     createCanvas(800,600);
@@ -28,18 +31,19 @@ function setup() {
 
     start_row = 0;
     start_col = 0;
-    rows = width/resolution;
-    cols = height/resolution;
-    max_rows = width/min_res;
-    max_cols = height/min_res;
+    cols = width/resolution;
+    rows = height/resolution;
+    max_cols = width/min_res;
+    max_rows = height/min_res;
 
-    grid = make2DArray(max_rows, max_cols);
+    grid = make2DArray(max_cols, max_rows);
 
     if(active) run();
 
-    for(let i = 0; i<max_rows; i++) {
-        for(let j = 0; j< max_cols; j++) {
-            if(grid[i][j]!= 1) grid[i][j] = floor(random(2));
+    for(let i = 0; i<max_cols; i++) {
+        for(let j = 0; j< max_rows; j++) {
+            //if(grid[i][j]!= 1) 
+            grid[i][j] = floor(random(2));
         }
     }
     draw(); 
@@ -47,15 +51,16 @@ function setup() {
 
 function draw(){
     resolution = slider.value();
-    rows = width/resolution;
-    cols = height/resolution;
+    cols = width/resolution;
+    rows = height/resolution;  
     if(active) calculateNext();
 
-    for(let i = 0; i < rows; i++) {
-        for(let j = 0; j < cols; j++) {
+    for(let i = 0; i < cols; i++) {
+        for(let j = 0; j < rows; j++) {
             let x = i * resolution;
             let y = j * resolution;
-            if(grid[i+start_row][j+start_col] == 1){
+
+            if(grid[i+start_col][j+start_row] == 1){
                 fill(255); 
                 rect(x,y,resolution,resolution);
                 stroke(0);
@@ -69,11 +74,16 @@ function draw(){
     }
 
     if(keyIsPressed){
-        if(keyCode == RIGHT_ARROW && (start_row + rows < max_rows)) start_row++;
-        if(keyCode == LEFT_ARROW && start_row > 0) start_row--;
-        if(keyCode == UP_ARROW && start_col > 0) start_col--;
-        if(keyCode == DOWN_ARROW && start_col + cols < max_rows) start_col++;
-    } 
+        // if(keyCode == DOWN_ARROW && (start_row + rows < max_rows)) start_row++;
+        // if(keyCode == UP_ARROW && (start_row > 0)) start_row--;
+        // if(keyCode == LEFT_ARROW && (start_col > 0)) start_col--;
+        // if(keyCode == RIGHT_ARROW && (start_col + cols < max_cols)) start_col++;
+
+        if(keyCode == DOWN_ARROW && (start_row + rows < grid[0].length)) start_row++;
+        if(keyCode == UP_ARROW && (start_row > 0)) start_row--;
+        if(keyCode == LEFT_ARROW && (start_col > 0)) start_col--;
+        if(keyCode == RIGHT_ARROW && (start_col + cols < grid.length)) start_col++;
+    }
 }
 
 function step() {
@@ -84,7 +94,7 @@ function step() {
 function mousePressed() {
     let x = floor(mouseX/resolution);
     let y = floor(mouseY/resolution);
-    if (x >= 0 && x < rows && y >= 0 && y < cols) {
+    if (x >= 0 && x < cols && y >= 0 && y < rows) {
         if(active) run();
         grid[x][y] = 1; // Set the clicked cell to white (alive)
     }
@@ -92,9 +102,9 @@ function mousePressed() {
 function mouseDragged(){
     let x = floor(mouseX/resolution);
     let y = floor(mouseY/resolution);
-    if (x >= 0 && x < rows && y >= 0 && y < cols) {
+    if (x >= 0 && x < cols && y >= 0 && y < rows) {
         if(active) run();
-        grid[x+start_row][y+start_col] = 1; // Set the clicked cell to white (alive)
+        grid[x+start_col][y+start_row] = 1; // Set the clicked cell to white (alive)
     }
 }
 
@@ -103,17 +113,17 @@ function clearGrid() {
     start_row = 0;
     start_col = 0;
     if(active) active = false;
-    for (let i = 0; i < max_rows; i++) {
-        for (let j = 0; j < max_cols; j++) {
+    for (let i = 0; i < max_cols; i++) {
+        for (let j = 0; j < max_rows; j++) {
             grid[i][j] = 0;
         }
     }
 }
 
 function calculateNext() {
-    for (let i = 0; i < max_rows; i++) {
-        for (let j = 0; j < max_cols; j++) {
-            let lives = numNeighbors(max_rows, max_cols, i, j);
+    for (let i = 0; i < max_cols; i++) {
+        for (let j = 0; j < max_rows; j++) {
+            let lives = numNeighbors(max_cols, max_rows, i, j);
 
             if (grid[i][j] == 1 && lives >= 2 && lives <= 3) {  
                 grid[i][j] = 3;
@@ -124,8 +134,8 @@ function calculateNext() {
         }
     }
 
-    for (let i = 0; i < max_rows; i++) {
-        for (let j = 0; j < max_cols; j++) {
+    for (let i = 0; i < max_cols; i++) {
+        for (let j = 0; j < max_rows; j++) {
             grid[i][j] >>= 1;  
         }
     }
