@@ -12,6 +12,21 @@
 <body>
     <H1> Game of Life (Clone) </H1>
 
+    <div class = "grid__container"> 
+        <div class = "grid_item">
+            <H2>About</H2>
+            <p>
+                When you upload an image file, a 5-color palette will be generated from the colors in the image.
+                The colors are determined using a simple k-clustering algorithm based on RGB values. 
+            </p>
+        </div>
+
+        <div class = "grid_item">
+            <div class = "canvas"></div>
+        </div>
+
+    </div>
+
     <div class="button-container">
         <button onclick="run()" id="loop">Play/Pause</button>
         <button onclick="step()" id="play">Step</button>

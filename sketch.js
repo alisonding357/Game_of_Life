@@ -10,9 +10,6 @@ let slider;
 let start_row;
 let start_col;
 
-//problem: has trouble with resizing after i scroll 
-//the grid is probably bigger than the draw screen
-
 function make2DArray(cols, rows) {
     let arr = new Array(cols);
     for (let i = 0; i < arr.length; i++) {
@@ -22,17 +19,20 @@ function make2DArray(cols, rows) {
   }
 
 function setup() {
-    createCanvas(800,600);
+    canvasContainer = select('.canvas');
+    let canv = createCanvas(800,600);
+    canv.parent(canvasContainer);
     background(255);
+
     slider = createSlider(10, 100, 10);
     slider.position(10, 10);
-    slider.size(100);
+    slider.size(200);
     resolution = slider.value();
 
     start_row = 0;
     start_col = 0;
-    cols = width/resolution;
-    rows = height/resolution;
+    cols = Math.floor(width/resolution);
+    rows = Math.floor(height/resolution);
     max_cols = width/min_res;
     max_rows = height/min_res;
 
@@ -51,15 +51,23 @@ function setup() {
 
 function draw(){
     resolution = slider.value();
-    cols = width/resolution;
-    rows = height/resolution;  
+    cols = Math.min(Math.floor(width / resolution), max_cols);
+    rows = Math.min(Math.floor(height / resolution), max_rows); 
     if(active) calculateNext();
+
+    if(keyIsPressed){
+        if(keyCode == DOWN_ARROW && (start_row + rows + 1 < grid[0].length - 1)) start_row++;
+        if(keyCode == UP_ARROW && (start_row > 0)) start_row--;
+        if(keyCode == LEFT_ARROW && (start_col > 0)) start_col--;
+        if(keyCode == RIGHT_ARROW && (start_col + cols + 1 < grid.length - 1)) start_col++;
+    }
 
     for(let i = 0; i < cols; i++) {
         for(let j = 0; j < rows; j++) {
             let x = i * resolution;
             let y = j * resolution;
 
+         if ((i + start_col) < max_cols && (j + start_row) < max_rows && (i + start_col) >= 0 && (j + start_row) >= 0) {
             if(grid[i+start_col][j+start_row] == 1){
                 fill(255); 
                 rect(x,y,resolution,resolution);
@@ -70,20 +78,12 @@ function draw(){
                 rect(x,y,resolution,resolution);
                 stroke(50);
             }
+         }
+         else if (!(j + start_row < max_rows)) if(start_row>0) start_row --;
+         else if(!(i + start_col < max_cols)) if(start_col>0) start_col --;
         }
     }
 
-    if(keyIsPressed){
-        // if(keyCode == DOWN_ARROW && (start_row + rows < max_rows)) start_row++;
-        // if(keyCode == UP_ARROW && (start_row > 0)) start_row--;
-        // if(keyCode == LEFT_ARROW && (start_col > 0)) start_col--;
-        // if(keyCode == RIGHT_ARROW && (start_col + cols < max_cols)) start_col++;
-
-        if(keyCode == DOWN_ARROW && (start_row + rows < grid[0].length)) start_row++;
-        if(keyCode == UP_ARROW && (start_row > 0)) start_row--;
-        if(keyCode == LEFT_ARROW && (start_col > 0)) start_col--;
-        if(keyCode == RIGHT_ARROW && (start_col + cols < grid.length)) start_col++;
-    }
 }
 
 function step() {
@@ -94,7 +94,8 @@ function step() {
 function mousePressed() {
     let x = floor(mouseX/resolution);
     let y = floor(mouseY/resolution);
-    if (x >= 0 && x < cols && y >= 0 && y < rows) {
+    if (x >= 0 && x < cols && y >= 0 && y < rows && (x + start_col) < max_cols && (y + start_row) < max_rows) {
+    //if (x >= 0 && x < cols && y >= 0 && y < rows) {
         if(active) run();
         grid[x][y] = 1; // Set the clicked cell to white (alive)
     }
@@ -102,7 +103,8 @@ function mousePressed() {
 function mouseDragged(){
     let x = floor(mouseX/resolution);
     let y = floor(mouseY/resolution);
-    if (x >= 0 && x < cols && y >= 0 && y < rows) {
+    if (x >= 0 && x < cols && y >= 0 && y < rows && (x + start_col) < max_cols && (y + start_row) < max_rows) {
+    //if (x >= 0 && x < cols && y >= 0 && y < rows) {
         if(active) run();
         grid[x+start_col][y+start_row] = 1; // Set the clicked cell to white (alive)
     }
