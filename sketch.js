@@ -19,10 +19,12 @@ function make2DArray(cols, rows) {
   }
 
 function setup() {
+    if(slider) slider.remove();
+    background(255);
     canvasContainer = select('.canvas');
     let canv = createCanvas(800,600);
     canv.parent(canvasContainer);
-    background(255);
+    //background(255);
 
     slider = createSlider(10, 100, 10);
     slider.size(200);
@@ -125,6 +127,7 @@ function clearGrid() {
             grid[i][j] = 0;
         }
     }
+    slider.value(10);
 }
 
 function calculateNext() {
