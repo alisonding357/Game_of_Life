@@ -25,8 +25,12 @@ function setup() {
     background(255);
 
     slider = createSlider(10, 100, 10);
-    slider.position(10, 10);
     slider.size(200);
+
+    slider.position(
+        canvasContainer.elt.offsetLeft + (canv.width - slider.width) / 2,
+        canvasContainer.elt.offsetTop + canv.height + 50
+    );
     resolution = slider.value();
 
     start_row = 0;
@@ -42,7 +46,6 @@ function setup() {
 
     for(let i = 0; i<max_cols; i++) {
         for(let j = 0; j< max_rows; j++) {
-            //if(grid[i][j]!= 1) 
             grid[i][j] = floor(random(2));
         }
     }
@@ -51,8 +54,10 @@ function setup() {
 
 function draw(){
     resolution = slider.value();
-    cols = Math.min(Math.floor(width / resolution), max_cols);
-    rows = Math.min(Math.floor(height / resolution), max_rows); 
+    // cols = Math.min(Math.floor(width / resolution), max_cols);
+    // rows = Math.min(Math.floor(height / resolution), max_rows); 
+    cols = width / resolution;
+    rows = height / resolution;
     if(active) calculateNext();
 
     if(keyIsPressed){
@@ -79,8 +84,8 @@ function draw(){
                 stroke(50);
             }
          }
-         else if (!(j + start_row < max_rows)) if(start_row>0) start_row --;
-         else if(!(i + start_col < max_cols)) if(start_col>0) start_col --;
+         if (!(j + start_row < max_rows)) if(start_row>0) start_row --;
+         if(!(i + start_col < max_cols)) if(start_col>0) start_col --;
         }
     }
 

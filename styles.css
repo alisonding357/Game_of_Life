@@ -21,9 +21,10 @@
 }
 
 body {
-  margin: 5%;
+  margin: 10%;
   font-weight: 100;
   background-color: var(--primary-color-light);
+  margin-bottom: 0%;
 }
 
 h1 {
@@ -34,21 +35,28 @@ h1 {
 h2 {
   font-weight: 600;
   font-size: 2cap;
-  padding-bottom: 0rem;
-  padding-top: 2rem;
+  padding-bottom: 0;
+  padding-top: 0rem;
+}
+
+ul {
+  padding-left: 3rem;
+}
+
+ul li {
+  padding: 0;
+  line-height: 1.7rem;
 }
 
 canvas {
   display: block;
+  align-self: center;
 }
 
 .grid__container {
-  min-height: 100vh;
-  max-width: var(--max-width);
-  margin: auto;
   display: grid;
-  grid-template-columns: 800px 900px;
-  grid-template-rows: 1000px 100px;
+  grid-template-columns: 600px 900px;
+  grid-template-rows: 800px 800px;
   gap: 2rem;
 }
 

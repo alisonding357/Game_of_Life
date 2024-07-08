@@ -19,6 +19,30 @@
                 When you upload an image file, a 5-color palette will be generated from the colors in the image.
                 The colors are determined using a simple k-clustering algorithm based on RGB values. 
             </p>
+
+            <H2>Instructions</H2>
+            <ul>
+                <li>Click "Play/Pause" to begin and pause the animation</li>
+                <li>Click "Step" to go to next stage of the grid</li>
+                <li>Click "Clear" to remove all colored blocks from grid</li>
+                <li>
+                    Click "Reset" to reset current board and return to randomly
+                    generated board.
+                </li>
+                <li>Drag or click on the grid to draw with your mouse.</li>
+                <li>Use the slider to zoom in and out on the canvas.</li>
+                <li>
+                    Use the arrow keys (← → ↑ ↓) to pan around the canvas 
+                    when zoomed in.
+                </li>
+            </ul>
+
+            <div class = "button_container">
+                <button onclick="run()" id="loop">Play/Pause</button>
+                <button onclick="step()" id="play">Step</button>
+                <button onclick="clearGrid()" id="clear">Clear</button>
+                <button onclick="setup()" id="reset">Reset</button>
+            </div>
         </div>
 
         <div class = "grid_item">
@@ -27,13 +51,7 @@
 
     </div>
 
-    <div class="button-container">
-        <button onclick="run()" id="loop">Play/Pause</button>
-        <button onclick="step()" id="play">Step</button>
-        <button onclick="clearGrid()" id="clear">Clear</button>
-        <button onclick="setup()" id="reset">Reset</button>
-    </div>
-    <div class="button-container">
+    
         
     </div>
 
