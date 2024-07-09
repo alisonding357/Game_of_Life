@@ -16,9 +16,24 @@
         <div class = "grid_item">
             <H2>About</H2>
             <p>
-                When you upload an image file, a 5-color palette will be generated from the colors in the image.
-                The colors are determined using a simple k-clustering algorithm based on RGB values. 
+                Game of Life is a cellular automaton devised by John Conway. A player gives
+                an initial state, which then evolves according to a set of rules:
             </p>
+            <ol>
+                <li>
+                    A "live cell" (white) with fewer than two live neighbours "dies" (turns black), 
+                    simulating underpopulation.
+                </li>
+                <li>
+                    A live cell with more than three live neighbours dies, simulating overpopulation.
+                </li>
+                <li>
+                    A dead cell with exactly three live neighbours revives live cell, simulating reproduction.
+                </li>
+                <li>
+                    A live cell with exactly two or three live neighbours lives on.
+                </li>
+            </ol>
 
             <H2>Instructions</H2>
             <ul>

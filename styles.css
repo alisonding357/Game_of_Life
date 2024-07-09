@@ -46,6 +46,15 @@ ul li {
   line-height: 1.7rem;
 }
 
+ol {
+  padding-left: 3rem;
+}
+
+ol li {
+  padding: 0;
+  line-height: 1.7rem;
+}
+
 canvas {
   display: block;
   align-self: center;

@@ -22,7 +22,7 @@ function setup() {
     if(slider) slider.remove();
     background(255);
     canvasContainer = select('.canvas');
-    let canv = createCanvas(800,600);
+    let canv = createCanvas(900,800);
     canv.parent(canvasContainer);
     //background(255);
 
